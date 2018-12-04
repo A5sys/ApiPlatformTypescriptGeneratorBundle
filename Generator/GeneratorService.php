@@ -9,20 +9,20 @@ use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Mapping\AttributeMetadataInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 
-class GenerateService
+class GeneratorService
 {
     private $apiPlatformPaths;
     public function __construct(
+        $apiPlatformPaths,
         ClassMetadataFactoryInterface $classMetadataFactory,
-        AnnotationPropertyMetadataFactory $propertyMetadataFactory,
-        $apiPlatformPaths
+        AnnotationPropertyMetadataFactory $propertyMetadataFactory
     ) {
+        $this->apiPlatformPaths = $apiPlatformPaths;
         $this->classMetadataFactory = $classMetadataFactory;
         $this->propertyMetadataFactory = $propertyMetadataFactory;
-        $this->apiPlatformPaths = $apiPlatformPaths;
     }
 
-    public function generate(): Response
+    public function generate(string $rootFolder): Response
     {
         $groupData = [];
         foreach (ReflectionClassRecursiveIterator::getReflectionClassesFromDirectories($this->apiPlatformPaths) as $metas) {
@@ -45,7 +45,6 @@ class GenerateService
         }
 
         foreach ($groupData as $group => $data) {
-            $classNames = array_keys($data);
             foreach ($data as $className => $attributes) {
                 $reflection = new \ReflectionClass($className);
                 $parent = $reflection->getParentClass();
@@ -60,7 +59,10 @@ class GenerateService
             }
         }
 
-        $rootFolder = './entity';
+        if (!\file_exists($rootFolder)) {
+            mkdir($rootFolder);
+        }
+
         foreach ($groupData as $groupName => $entities) {
             $groupFolder = $rootFolder.'/ws_'.$groupName;
 
@@ -82,7 +84,10 @@ class GenerateService
     {
         $attributesImportStrings = [];
         foreach ($attributes as $attribute) {
-            $attributesImportStrings[] = $this->getImportContent($attribute['type']);
+            $import = $this->getImportContent($attribute['type']);
+            if ($import) {
+                $attributesImportStrings[] = $import;
+            }
         }
         $attributesImportUnique = array_unique($attributesImportStrings);
         $attributesImport = join('', $attributesImportUnique);
@@ -94,11 +99,10 @@ class GenerateService
 
         return '
 '.$attributesImport.'
-
 export class '.$this->cleanName($entityName).' {
 '.$attributesContent.'
 }
-        ';
+';
     }
 
     private function getAttributeContent($attributeName, Type $type) : string
@@ -123,7 +127,7 @@ export class '.$this->cleanName($entityName).' {
         return  '  public '.$attributeName.': '.$strType.';'."\n";
     }
 
-    private function getImportContent(Type $type) : string
+    private function getImportContent(Type $type) : ?string
     {
         $entity = $type->getCollectionValueType();
         $entityClass = $type->getClassName();
@@ -135,7 +139,7 @@ export class '.$this->cleanName($entityName).' {
         }
 
         if (!$strType || $strType === 'DateTime') {
-            return '';
+            return null;
         }
 
         return 'import {'.$strType.'} from \'./'.$strType.'\';'."\n";

@@ -10,7 +10,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('apiplatform_typescript_generator');
+        $rootNode = $treeBuilder->root('api_platform_typescript_generator');
+        $rootNode
+            ->children()
+                ->scalarNode('path')
+            ->end()
+        ->end();
 
         return $treeBuilder;
     }

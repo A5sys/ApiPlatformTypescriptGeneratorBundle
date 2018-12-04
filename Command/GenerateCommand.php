@@ -2,7 +2,7 @@
 
 namespace A5sys\ApiPlatformTypescriptGeneratorBundle\Command;
 
-use A5sys\ApiPlatformTypescriptGeneratorBundle\Generator\GenerateService;
+use A5sys\ApiPlatformTypescriptGeneratorBundle\Generator\GeneratorService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,10 +10,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GenerateCommand extends Command
 {
     private $generatorService;
+    private $path;
 
-    public function __construct(GenerateService $generatorService)
+    public function __construct(string $path, GeneratorService $generatorService)
     {
         $this->generatorService = $generatorService;
+        $this->path = $path;
         parent::__construct();
     }
 
@@ -27,6 +29,6 @@ class GenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->generatorService->generate();
+        $this->generatorService->generate($this->path);
     }
 }
