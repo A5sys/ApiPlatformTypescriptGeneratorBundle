@@ -97,11 +97,10 @@ class GeneratorService
             $attributesContent .= $this->getAttributeContent($attributeName, $attribute['type']);
         }
 
-        return '
-'.$attributesImport.'
+        return
+$attributesImport.'
 export class '.$this->cleanName($entityName).' {
-'.$attributesContent.'
-}
+'.$attributesContent.'}
 ';
     }
 
@@ -142,7 +141,7 @@ export class '.$this->cleanName($entityName).' {
             return null;
         }
 
-        return 'import {'.$strType.'} from \'./'.$strType.'\';'."\n";
+        return 'import { '.$strType.' } from \'./'.$strType.'\';'."\n";
     }
 
 
