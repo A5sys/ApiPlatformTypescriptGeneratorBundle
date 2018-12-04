@@ -1,0 +1,13 @@
+services:
+    apiplatform_typescript_generator.entity_generator:
+        class: A5sys\ApiPlatformTypescriptGeneratorBundle\Generator\GeneratorService
+        arguments:
+            - '%api_platform.resource_class_directories%'
+            - "@api_platform.metadata.property.metadata_factory.annotation"
+            - "@api_platform.metadata.property.metadata_factory.annotation"
+    apiplatform_typescript_generator.entities_command:
+        class: A5sys\ApiPlatformTypescriptGeneratorBundle\Command\GenerateCommand
+        arguments:
+            - "@apiplatform_typescript_generator.entity_generator"
+        tags:
+            - { name: console.command }

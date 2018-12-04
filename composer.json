@@ -1,0 +1,8 @@
+{
+    "name": "a5sys/apiplatform-typescript-generator-bundle",
+    "type": "symfony-bundle",
+    "autoload": {
+        "psr-4": { "A5sys\\ApiPlatformTypescriptGeneratorBundle\\": "" }
+    },
+    "license": "MIT"
+}
