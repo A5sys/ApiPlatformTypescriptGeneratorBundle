@@ -12,11 +12,17 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 class GeneratorService
 {
     private $apiPlatformPaths;
+    private $prefixToRemoves;
+    private $classMetadataFactory;
+    private $propertyMetadataFactory;
+
     public function __construct(
         $apiPlatformPaths,
+        array $prefixToRemoves,
         ClassMetadataFactoryInterface $classMetadataFactory,
         AnnotationPropertyMetadataFactory $propertyMetadataFactory
     ) {
+        $this->prefixToRemoves = $prefixToRemoves;
         $this->apiPlatformPaths = $apiPlatformPaths;
         $this->classMetadataFactory = $classMetadataFactory;
         $this->propertyMetadataFactory = $propertyMetadataFactory;
@@ -168,8 +174,9 @@ export class '.$this->cleanName($entityName).' {
     {
         $cleanName = str_replace('\\', '', $className);
 
-        $cleanName = str_replace('AppEntity', '', $cleanName);
-        $cleanName = str_replace('AppDtoUsageCompletePressurePerSpeed', '', $cleanName);
+        foreach ($this->prefixToRemoves as $prefixToRemove) {
+            $cleanName = str_replace($prefixToRemove, '', $cleanName);
+        }
 
         return $cleanName;
     }

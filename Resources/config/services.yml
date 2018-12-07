@@ -3,6 +3,7 @@ services:
         class: A5sys\ApiPlatformTypescriptGeneratorBundle\Generator\GeneratorService
         arguments:
             - '%api_platform.resource_class_directories%'
+            - '%api_platform_typescript_generator.prefix_removal%'
             - "@serializer.mapping.class_metadata_factory"
             - "@api_platform.metadata.property.metadata_factory.annotation"
     apiplatform_typescript_generator.entities_command:

@@ -16,6 +16,9 @@ class ApiPlatformTypescriptGeneratorExtension extends Extension
         $path = $configuration['path'];
         $container->setParameter('api_platform_typescript_generator.path', $path);
 
+        $prefixRemoval = $configuration['prefix_removal'];
+        $container->setParameter('api_platform_typescript_generator.prefix_removal', $prefixRemoval);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

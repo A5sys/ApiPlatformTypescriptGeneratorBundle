@@ -15,6 +15,9 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('path')
             ->end()
+            ->arrayNode('prefix_removal')
+                ->prototype('scalar')->end()
+            ->end()
         ->end();
 
         return $treeBuilder;
