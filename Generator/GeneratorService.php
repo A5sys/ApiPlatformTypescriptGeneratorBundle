@@ -152,7 +152,7 @@ export class '.$this->getFileNameByClassname($entityName).' {
                 return ': boolean';
                 break;
             case 'array':
-                return '= []';
+                return ' = []';
                 break;
             default:
                 return ': '.$type;
