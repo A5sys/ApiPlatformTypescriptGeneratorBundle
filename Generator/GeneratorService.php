@@ -138,7 +138,7 @@ export class '.$this->getFileNameByClassname($entityName).' {
             $strType = ': string';
         }
 
-        return  '  public '.$attributeName.' '.$strType.';'."\n";
+        return  '  public '.$attributeName.$strType.';'."\n";
     }
 
     private function convertBuiltinTypeToTypescript(string $type): string
