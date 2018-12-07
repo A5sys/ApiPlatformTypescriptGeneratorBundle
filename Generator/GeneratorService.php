@@ -108,7 +108,7 @@ export class '.$this->cleanName($entityName).' {
     {
         $entity = $type->getCollectionValueType();
         $entityClass = $type->getClassName();
-        $builtinType = $type->getCollectionValueType();
+        $builtinType = $type->getBuiltinType();
         $strType = 'string';
 
         if ($entity) {
@@ -116,7 +116,7 @@ export class '.$this->cleanName($entityName).' {
         } else if ($entityClass) {
             $strType = $this->getLocalPath($entityClass);
         } else if ($builtinType) {
-            $strType = $builtinType;
+            $strType = $this->convertBuiltinTypeToTypescript($builtinType);
         }
 
         if ($strType === 'DateTime') {
@@ -124,6 +124,21 @@ export class '.$this->cleanName($entityName).' {
         }
 
         return  '  public '.$attributeName.': '.$strType.';'."\n";
+    }
+
+    private function convertBuiltinTypeToTypescript(string $type): string
+    {
+        switch ($type) {
+            case 'int':
+            case 'float':
+                return 'number';
+                break;
+            case 'bool':
+                return 'boolean';
+                break;
+            default:
+                return $type;
+        }
     }
 
     private function getImportContent(Type $type) : ?string
@@ -153,6 +168,9 @@ export class '.$this->cleanName($entityName).' {
     {
         $cleanName = str_replace('\\', '', $className);
 
-        return str_replace('AppEntity', '', $cleanName);
+        $cleanName = str_replace('AppEntity', '', $cleanName);
+        $cleanName = str_replace('AppDtoUsageCompletePressurePerSpeed', '', $cleanName);
+
+        return $cleanName;
     }
 }
