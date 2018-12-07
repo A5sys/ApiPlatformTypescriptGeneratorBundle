@@ -74,7 +74,7 @@ class GeneratorService
 
             $entityFolder = $rootFolder.'/'.$subfolder;
             if (!\file_exists($entityFolder)) {
-                mkdir($entityFolder, 755, true);
+                mkdir($entityFolder, 0777, true);
             }
 
             $content = $this->getTsContent($className, $attributes);
